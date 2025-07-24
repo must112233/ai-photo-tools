@@ -10,6 +10,8 @@
     
     <!-- Adsterra Social Bar Ad -->
     <script type='text/javascript' src='//pl27171403.profitableratecpm.com/f9/12/2f/f9122fa99afde8b4d3732bf41be0e48b.js'></script>
+    <!-- Adsterra Popunder Ad -->
+    <script type='text/javascript' src='//pl27171404.profitableratecpm.com/e8/a4/75/e8a47528348c9dd21921ba334d724919.js'></script>
 
     <style>
         body {
@@ -165,6 +167,11 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        /* Disabled button style */
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -269,6 +276,20 @@
                 </div>
             </div>
         </section>
+
+        <!-- Adsterra Banner Ad -->
+        <div class="container mx-auto my-4 flex justify-center">
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : '0832f30f5523a8d14e11a3857426e9cf',
+                    'format' : 'iframe',
+                    'height' : 90,
+                    'width' : 728,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//www.highperformanceformat.com/0832f30f5523a8d14e11a3857426e9cf/invoke.js"></script>
+        </div>
 
         <!-- Gallery / Before-After Section -->
         <section id="gallery" class="py-20">
@@ -400,13 +421,13 @@
                  <!-- AI Magic Tools -->
                  <div class="border-t border-gray-700 pt-4">
                     <h3 class="text-lg font-semibold text-indigo-300 mb-3">AI Magic Tools</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-                        <button id="enhance-btn" class="p-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-sm">Enhance</button>
-                        <button id="face-restore-btn" class="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm">Face Restore</button>
-                        <button id="colorize-btn" class="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm">AI Colorize</button>
-                        <button id="denoise-btn" class="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm">Denoise</button>
-                        <button id="scratch-remove-btn" class="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm">Scratches</button>
-                        <button id="magic-retouch-btn" class="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm">Retouch</button>
+                    <div id="ai-tools-grid" class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                        <button data-filter="brightness(1.15) contrast(1.15) saturate(1.2)" data-message="AI Enhance Applied!" class="ai-tool-btn p-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-sm">Enhance</button>
+                        <button data-filter="contrast(1.2) brightness(1.05)" data-message="Face Restoration Applied!" class="ai-tool-btn p-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm">Face Restore</button>
+                        <button data-filter="saturate(2.5)" data-message="AI Colorization Applied!" class="ai-tool-btn p-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm">AI Colorize</button>
+                        <button data-filter="blur(0.4px) contrast(0.95)" data-message="Denoise & Deblur Applied!" class="ai-tool-btn p-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm">Denoise</button>
+                        <button class="ai-tool-btn p-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm">Scratches</button>
+                        <button class="ai-tool-btn p-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm">Retouch</button>
                     </div>
                  </div>
             </div>
@@ -421,6 +442,7 @@
         let originalImage = null;
         let currentImage = null;
         let isLoggedIn = false;
+        let isProcessing = false;
         const canvas = document.getElementById('editor-canvas');
         const ctx = canvas.getContext('2d');
 
@@ -434,7 +456,6 @@
 
         // --- Authentication ---
         function initializeAuth() {
-            // Check if user is "logged in" from a previous session
             if (sessionStorage.getItem('isLoggedIn') === 'true') {
                 isLoggedIn = true;
             }
@@ -494,7 +515,6 @@
 
         // --- Event Listeners ---
         function initializeEventListeners() {
-            // Smooth Scrolling
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -511,11 +531,8 @@
                 });
             });
             document.getElementById('logo-link').addEventListener('click', (e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
-
-            // Mobile Menu
             document.getElementById('mobile-menu-button')?.addEventListener('click', toggleMobileMenu);
-
-            // Modals
+            
             const loginModal = document.getElementById('login-modal');
             const uploadModal = document.getElementById('upload-modal');
             document.getElementById('login-button-desktop')?.addEventListener('click', (e) => { e.preventDefault(); openModal(loginModal); });
@@ -536,7 +553,6 @@
                 modal.addEventListener('click', (e) => { if (e.target === modal) { closeModal(modal); } });
             });
 
-            // UPI Button
             document.getElementById('buy-pro-button').addEventListener('click', () => {
                 const upiId = '9785361961@ybl';
                 if (navigator.clipboard) {
@@ -551,20 +567,25 @@
                 }
             });
 
-            // Gemini Testimonial
             document.getElementById('generate-testimonial-btn').addEventListener('click', generateTestimonial);
-
-            // Image Editor
             document.getElementById('file-upload').addEventListener('change', handleImageUpload);
-            document.getElementById('enhance-btn').addEventListener('click', () => applyFilterWithProcessing('brightness(1.15) contrast(1.15) saturate(1.2)', 'AI Enhance Applied!'));
-            document.getElementById('face-restore-btn').addEventListener('click', () => applyFilterWithProcessing('contrast(1.2) brightness(1.05)', 'Face Restoration Applied!'));
-            document.getElementById('colorize-btn').addEventListener('click', () => applyFilterWithProcessing('saturate(2.5)', 'AI Colorization Applied!'));
-            document.getElementById('denoise-btn').addEventListener('click', () => applyFilterWithProcessing('blur(0.4px) contrast(0.95)', 'Denoise & Deblur Applied!'));
-            document.getElementById('scratch-remove-btn').addEventListener('click', () => showToast('Scratch Removal feature coming soon!'));
-            document.getElementById('magic-retouch-btn').addEventListener('click', () => showToast('Magic Retouch feature coming soon!'));
-            document.getElementById('crop-btn').addEventListener('click', () => showToast('Crop feature coming soon!'));
+            
+            // AI Tools Event Listeners
+            document.querySelectorAll('.ai-tool-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const filter = e.target.dataset.filter;
+                    const message = e.target.dataset.message;
+                    if (filter && message) {
+                        applyFilterWithProcessing(filter, message);
+                    } else {
+                        showToast('This feature is coming soon!');
+                    }
+                });
+            });
+
             document.getElementById('reset-btn').addEventListener('click', () => {
-                drawImageToCanvas(originalImage);
+                currentImage = originalImage;
+                drawImageToCanvas(currentImage);
                 showToast('Edits Reset!');
             });
             document.getElementById('download-btn').addEventListener('click', saveToComparisonSlider);
@@ -601,6 +622,12 @@
             toast.classList.add('show');
             toastTimeout = setTimeout(() => { toast.classList.remove('show'); }, 3000);
         };
+        
+        function toggleAITools(disabled) {
+            document.querySelectorAll('#ai-tools-grid button, #reset-btn').forEach(button => {
+                button.disabled = disabled;
+            });
+        }
 
         // --- Gemini API ---
         const apiKey = ""; // Provided at runtime
@@ -672,15 +699,26 @@
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
             updateDownloadLink();
         }
-
+        
         function applyFilterWithProcessing(filter, message) {
+            if (isProcessing) return;
+            isProcessing = true;
+            toggleAITools(true);
             const overlay = document.getElementById('processing-overlay');
             overlay.classList.remove('hidden');
+
             setTimeout(() => {
                 drawImageToCanvas(currentImage, filter);
-                overlay.classList.add('hidden');
-                showToast(message);
-            }, 1500); // Simulate processing time
+                const newImageFromCanvas = new Image();
+                newImageFromCanvas.onload = () => {
+                    currentImage = newImageFromCanvas; 
+                    overlay.classList.add('hidden');
+                    toggleAITools(false);
+                    isProcessing = false;
+                    showToast(message);
+                };
+                newImageFromCanvas.src = canvas.toDataURL('image/jpeg', 0.9);
+            }, 1500); 
         }
 
         function updateDownloadLink() {
@@ -696,7 +734,6 @@
 
         // --- Comparison Slider ---
         function initializeComparisonSlider() {
-            // Update slider with saved images if they exist
             const savedBefore = sessionStorage.getItem('beforeImage');
             const savedAfter = sessionStorage.getItem('afterImage');
             if (savedBefore && savedAfter) {
