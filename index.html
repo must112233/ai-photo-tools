@@ -114,6 +114,23 @@
             border-radius: 0.5rem;
             background-color: #0B0F19;
         }
+        #canvas-container {
+            position: relative;
+        }
+        #processing-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(17, 24, 39, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            z-index: 10;
+        }
         /* Toast Notification */
         #toast-notification {
             position: fixed;
@@ -140,8 +157,8 @@
             border: 4px solid #f3f3f3;
             border-top: 4px solid #4f46e5;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            width: 48px;
+            height: 48px;
             animation: spin 1s linear infinite;
         }
         @keyframes spin {
@@ -168,12 +185,15 @@
                     <a href="#testimonials" class="text-gray-300 hover:text-white transition-colors">Testimonials</a>
                     <a href="#pricing" class="text-gray-300 hover:text-white transition-colors">Pricing</a>
                 </nav>
-                <div class="flex items-center">
+                <div id="auth-section" class="flex items-center">
                      <a href="#" id="login-button-desktop" class="hidden sm:inline-block text-gray-300 hover:text-white mr-6">Log In</a>
                     <a href="#pricing" id="get-started-button-desktop" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors">Get Started Free</a>
                     <button id="mobile-menu-button" class="md:hidden ml-4 p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg id="mobile-menu-open-icon" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                         <svg id="mobile-menu-close-icon" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
@@ -186,7 +206,9 @@
                 <a href="#gallery" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Gallery</a>
                 <a href="#testimonials" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Testimonials</a>
                 <a href="#pricing" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Pricing</a>
-                <a href="#" id="login-button-mobile" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Log In</a>
+                <div id="auth-section-mobile" class="border-t border-gray-700 mt-2 pt-2">
+                    <a href="#" id="login-button-mobile" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Log In</a>
+                </div>
             </div>
         </div>
     </header>
@@ -256,8 +278,8 @@
                     <p class="text-lg text-gray-400 mt-2">Drag the slider to compare the original and enhanced images.</p>
                 </div>
                 <div class="comparison-slider rounded-2xl shadow-2xl max-w-4xl mx-auto" id="image-comparison">
-                    <img src="https://placehold.co/1200x800/333/ccc?text=After" alt="After" class="block w-full rounded-2xl">
-                    <div class="before-image"><img src="https://placehold.co/1200x800/999/111?text=Before" alt="Before" class="block w-full rounded-2xl"></div>
+                    <img id="after-image" src="https://placehold.co/1200x800/333/ccc?text=After" alt="After" class="block w-full rounded-2xl">
+                    <div class="before-image"><img id="before-image" src="https://placehold.co/1200x800/999/111?text=Before" alt="Before" class="block w-full rounded-2xl"></div>
                     <div class="slider-handle"></div>
                 </div>
             </div>
@@ -271,7 +293,7 @@
                     <div class="mt-4 flex justify-center">
                         <button id="generate-testimonial-btn" class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors">
                             <span id="testimonial-btn-text">Generate a Sample Testimonial ✨</span>
-                            <div id="testimonial-loader" class="loader hidden"></div>
+                            <div id="testimonial-loader" class="loader hidden w-6 h-6"></div>
                         </button>
                     </div>
                 </div>
@@ -288,7 +310,7 @@
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-12"><h2 class="text-3xl md:text-4xl font-bold text-white">Choose Your Plan</h2><p class="text-lg text-gray-400 mt-2">Start for free, upgrade when you need more power.</p></div>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                    <div class="feature-card p-8 rounded-xl flex flex-col"><h3 class="text-2xl font-bold text-white">Free</h3><p class="text-gray-400 mt-2 mb-6">For casual use</p><p class="text-4xl font-extrabold text-white mb-6">$0<span class="text-lg font-medium text-gray-400">/month</span></p><ul class="space-y-4 text-gray-300 mb-8 flex-grow"><li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>5 free enhancements</li><li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>Standard speed</li><li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>Watermarked results</li></ul><button id="get-started-free" class="w-full text-center bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition-colors">Get Started</button></div>
+                    <div class="feature-card p-8 rounded-xl flex flex-col"><h3 class="text-2xl font-bold text-white">Free</h3><p class="text-gray-400 mt-2 mb-6">For casual use</p><p class="text-4xl font-extrabold text-white mb-6">$0<span class="text-lg font-medium text-gray-400">/month</span></p><ul class="space-y-4 text-gray-300 mb-8 flex-grow"><li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>5 free enhancements</li><li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>Standard speed</li><li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>Watermarked results</li></ul><button id="get-started-free-pricing" class="w-full text-center bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition-colors">Get Started</button></div>
                     <div class="feature-card p-8 rounded-xl flex flex-col border-2 border-indigo-500 relative"><div class="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2"><span class="bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full">MOST POPULAR</span></div><h3 class="text-2xl font-bold text-white">Pro</h3><p class="text-gray-400 mt-2 mb-6">For professionals & enthusiasts</p><p class="text-4xl font-extrabold text-white mb-2">$9<span class="text-lg font-medium text-gray-400">/month</span></p><div class="mb-6 text-center"><p class="text-indigo-300 font-semibold">To buy the pro version, pay to UPI:</p><p class="text-lg font-bold text-white mt-1 select-all">9785361961@ybl</p></div><ul class="space-y-4 text-gray-300 mb-8 flex-grow"><li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>200 enhancements/month</li><li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>Priority processing</li><li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>No watermarks</li><li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>Access to all AI tools</li></ul><button id="buy-pro-button" class="w-full text-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg transition-colors">Copy UPI ID & Buy</button></div>
                     <div class="feature-card p-8 rounded-xl flex flex-col"><h3 class="text-2xl font-bold text-white">Business</h3><p class="text-gray-400 mt-2 mb-6">For teams & agencies</p><p class="text-4xl font-extrabold text-white mb-6">$29<span class="text-lg font-medium text-gray-400">/month</span></p><ul class="space-y-4 text-gray-300 mb-8 flex-grow"><li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>Unlimited enhancements</li><li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>Highest priority queue</li><li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>API access</li><li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>Team collaboration</li></ul><a href="mailto:sales@reminiai.example.com" class="w-full text-center bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition-colors">Contact Sales</a></div>
                 </div>
@@ -325,7 +347,24 @@
 
     <!-- Modals -->
     <div id="login-modal" class="modal-overlay">
-        <div class="modal-content"><h2 class="text-2xl font-bold text-white text-center mb-6">Welcome Back</h2><form><div class="mb-4"><label for="email" class="block text-sm font-medium text-gray-400 mb-2">Email Address</label><input type="email" id="email" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"></div><div class="mb-6"><label for="password" class="block text-sm font-medium text-gray-400 mb-2">Password</label><input type="password" id="password" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"></div><button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg transition-colors">Log In</button></form><p class="text-center text-sm text-gray-400 mt-4">Don't have an account? <a href="#" class="font-medium text-indigo-400 hover:text-indigo-300">Sign Up</a></p><button id="close-login-modal" class="absolute top-4 right-4 text-gray-500 hover:text-white">&times;</button></div>
+        <div class="modal-content relative">
+            <button id="close-login-modal" class="absolute top-4 right-4 text-gray-500 hover:text-white text-3xl leading-none">&times;</button>
+            <h2 class="text-2xl font-bold text-white text-center mb-6">Welcome Back</h2>
+            <form id="login-form">
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-400 mb-2">Email Address</label>
+                    <input type="email" id="email" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" value="user@example.com" required>
+                </div>
+                <div class="mb-6">
+                    <label for="password" class="block text-sm font-medium text-gray-400 mb-2">Password</label>
+                    <input type="password" id="password" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" value="password" required>
+                </div>
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg transition-colors">Log In</button>
+            </form>
+            <p class="text-center text-sm text-gray-400 mt-4">
+                Don't have an account? <a href="#" class="font-medium text-indigo-400 hover:text-indigo-300">Sign Up</a>
+            </p>
+        </div>
     </div>
 
     <div id="upload-modal" class="modal-overlay">
@@ -343,8 +382,12 @@
             <!-- View 2: Editor -->
             <div id="editor-view" class="hidden">
                  <h2 class="text-2xl font-bold text-white mb-4">Photo Editor</h2>
-                 <div class="mb-4 bg-gray-900 p-2 rounded-lg">
+                 <div id="canvas-container" class="mb-4 bg-gray-900 p-2 rounded-lg">
                     <canvas id="editor-canvas"></canvas>
+                    <div id="processing-overlay" class="hidden">
+                        <div class="loader"></div>
+                        <p class="text-white mt-4 text-lg font-semibold">Applying AI Magic...</p>
+                    </div>
                  </div>
 
                  <!-- Main Controls -->
@@ -374,102 +417,198 @@
     <div id="toast-notification"><span id="toast-message"></span></div>
 
     <script>
-        // --- State ---
+        // --- App State ---
         let originalImage = null;
-        let currentImage = null; // This will hold the image object for redrawing
+        let currentImage = null;
+        let isLoggedIn = false;
         const canvas = document.getElementById('editor-canvas');
         const ctx = canvas.getContext('2d');
 
-        // --- Lucide Icons ---
-        lucide.createIcons();
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            initializeComparisonSlider();
+            initializeAuth();
+            initializeEventListeners();
+        });
 
-        // --- Smooth Scrolling ---
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    const mobileMenu = document.getElementById('mobile-menu');
-                    if (!mobileMenu.classList.contains('hidden')) { mobileMenu.classList.add('hidden'); }
-                    const headerOffset = 64;
-                    const elementPosition = targetElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+        // --- Authentication ---
+        function initializeAuth() {
+            // Check if user is "logged in" from a previous session
+            if (sessionStorage.getItem('isLoggedIn') === 'true') {
+                isLoggedIn = true;
+            }
+            updateHeaderUI();
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            isLoggedIn = true;
+            sessionStorage.setItem('isLoggedIn', 'true');
+            updateHeaderUI();
+            closeModal(document.getElementById('login-modal'));
+            showToast('Login successful! Welcome back.');
+        }
+
+        function handleLogout() {
+            isLoggedIn = false;
+            sessionStorage.removeItem('isLoggedIn');
+            updateHeaderUI();
+            showToast('You have been logged out.');
+        }
+
+        function updateHeaderUI() {
+            const authSection = document.getElementById('auth-section');
+            const authSectionMobile = document.getElementById('auth-section-mobile');
+            
+            if (isLoggedIn) {
+                authSection.innerHTML = `
+                    <span class="text-white mr-4">Welcome!</span>
+                    <button id="logout-button" class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors">Log Out</button>
+                `;
+                authSectionMobile.innerHTML = `
+                     <button id="logout-button-mobile" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Log Out</button>
+                `;
+                document.getElementById('logout-button').addEventListener('click', handleLogout);
+                document.getElementById('logout-button-mobile').addEventListener('click', handleLogout);
+            } else {
+                authSection.innerHTML = `
+                    <a href="#" id="login-button-desktop" class="hidden sm:inline-block text-gray-300 hover:text-white mr-6">Log In</a>
+                    <a href="#pricing" id="get-started-button-desktop" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors">Get Started Free</a>
+                    <button id="mobile-menu-button" class="md:hidden ml-4 p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700">
+                        <svg id="mobile-menu-open-icon" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+                        <svg id="mobile-menu-close-icon" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                `;
+                 authSectionMobile.innerHTML = `
+                    <a href="#" id="login-button-mobile" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Log In</a>
+                `;
+                document.getElementById('login-button-desktop').addEventListener('click', (e) => { e.preventDefault(); openModal(document.getElementById('login-modal')); });
+                document.getElementById('get-started-button-desktop').addEventListener('click', (e) => { e.preventDefault(); openModal(document.getElementById('upload-modal')); });
+                document.getElementById('mobile-menu-button').addEventListener('click', toggleMobileMenu);
+                document.getElementById('login-button-mobile').addEventListener('click', (e) => { e.preventDefault(); openModal(document.getElementById('login-modal')); });
+            }
+            lucide.createIcons();
+        }
+
+
+        // --- Event Listeners ---
+        function initializeEventListeners() {
+            // Smooth Scrolling
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        closeMobileMenu();
+                        const headerOffset = 64;
+                        const elementPosition = targetElement.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                    }
+                });
+            });
+            document.getElementById('logo-link').addEventListener('click', (e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+            // Mobile Menu
+            document.getElementById('mobile-menu-button')?.addEventListener('click', toggleMobileMenu);
+
+            // Modals
+            const loginModal = document.getElementById('login-modal');
+            const uploadModal = document.getElementById('upload-modal');
+            document.getElementById('login-button-desktop')?.addEventListener('click', (e) => { e.preventDefault(); openModal(loginModal); });
+            document.getElementById('login-button-mobile')?.addEventListener('click', (e) => { e.preventDefault(); openModal(loginModal); });
+            document.getElementById('close-login-modal').addEventListener('click', () => closeModal(loginModal));
+            document.getElementById('login-form').addEventListener('submit', handleLogin);
+            
+            const uploadButtons = ['enhance-photo-hero', 'get-started-free-pricing', 'upload-photo-cta'];
+            uploadButtons.forEach(id => {
+                document.getElementById(id).addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openModal(uploadModal);
+                });
+            });
+            document.getElementById('close-upload-modal').addEventListener('click', () => closeModal(uploadModal));
+            
+            [loginModal, uploadModal].forEach(modal => {
+                modal.addEventListener('click', (e) => { if (e.target === modal) { closeModal(modal); } });
+            });
+
+            // UPI Button
+            document.getElementById('buy-pro-button').addEventListener('click', () => {
+                const upiId = '9785361961@ybl';
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(upiId).then(() => showToast('UPI ID copied to clipboard!'), () => showToast('Could not copy UPI ID.'));
+                } else {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = upiId;
+                    document.body.appendChild(textArea);
+                    textArea.focus(); textArea.select();
+                    try { document.execCommand('copy'); showToast('UPI ID copied to clipboard!'); } catch (err) { showToast('Could not copy UPI ID.'); }
+                    document.body.removeChild(textArea);
                 }
             });
-        });
-        document.getElementById('logo-link').addEventListener('click', (e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
-        // --- Mobile Menu Toggle ---
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            // Gemini Testimonial
+            document.getElementById('generate-testimonial-btn').addEventListener('click', generateTestimonial);
 
-        // --- Modal Handling ---
-        const loginModal = document.getElementById('login-modal');
-        const uploadModal = document.getElementById('upload-modal');
-        const uploadView = document.getElementById('upload-view');
-        const editorView = document.getElementById('editor-view');
+            // Image Editor
+            document.getElementById('file-upload').addEventListener('change', handleImageUpload);
+            document.getElementById('enhance-btn').addEventListener('click', () => applyFilterWithProcessing('brightness(1.15) contrast(1.15) saturate(1.2)', 'AI Enhance Applied!'));
+            document.getElementById('face-restore-btn').addEventListener('click', () => applyFilterWithProcessing('contrast(1.2) brightness(1.05)', 'Face Restoration Applied!'));
+            document.getElementById('colorize-btn').addEventListener('click', () => applyFilterWithProcessing('saturate(2.5)', 'AI Colorization Applied!'));
+            document.getElementById('denoise-btn').addEventListener('click', () => applyFilterWithProcessing('blur(0.4px) contrast(0.95)', 'Denoise & Deblur Applied!'));
+            document.getElementById('scratch-remove-btn').addEventListener('click', () => showToast('Scratch Removal feature coming soon!'));
+            document.getElementById('magic-retouch-btn').addEventListener('click', () => showToast('Magic Retouch feature coming soon!'));
+            document.getElementById('crop-btn').addEventListener('click', () => showToast('Crop feature coming soon!'));
+            document.getElementById('reset-btn').addEventListener('click', () => {
+                drawImageToCanvas(originalImage);
+                showToast('Edits Reset!');
+            });
+            document.getElementById('download-btn').addEventListener('click', saveToComparisonSlider);
+        }
 
+        // --- UI Functions ---
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+            document.getElementById('mobile-menu-open-icon').classList.toggle('hidden');
+            document.getElementById('mobile-menu-close-icon').classList.toggle('hidden');
+        }
+        function closeMobileMenu() {
+            document.getElementById('mobile-menu').classList.add('hidden');
+            document.getElementById('mobile-menu-open-icon').classList.remove('hidden');
+            document.getElementById('mobile-menu-close-icon').classList.add('hidden');
+        }
         const openModal = (modal) => modal.classList.add('active');
         const closeModal = (modal) => {
             modal.classList.remove('active');
-            // Reset modal to upload view when closed
-            uploadView.classList.remove('hidden');
-            editorView.classList.add('hidden');
-            originalImage = null;
-            currentImage = null;
+            if (modal.id === 'upload-modal') {
+                document.getElementById('upload-view').classList.remove('hidden');
+                document.getElementById('editor-view').classList.add('hidden');
+                originalImage = null;
+                currentImage = null;
+            }
         };
-        document.getElementById('login-button-desktop').addEventListener('click', (e) => { e.preventDefault(); openModal(loginModal); });
-        document.getElementById('login-button-mobile').addEventListener('click', (e) => { e.preventDefault(); openModal(loginModal); });
-        document.getElementById('close-login-modal').addEventListener('click', () => closeModal(loginModal));
-        const uploadButtons = ['enhance-photo-hero', 'get-started-free', 'upload-photo-cta'];
-        uploadButtons.forEach(id => {
-            document.getElementById(id).addEventListener('click', (e) => {
-                e.preventDefault();
-                openModal(uploadModal);
-            });
-        });
-        document.getElementById('close-upload-modal').addEventListener('click', () => closeModal(uploadModal));
-        [loginModal, uploadModal].forEach(modal => {
-            modal.addEventListener('click', (e) => { if (e.target === modal) { closeModal(modal); } });
-        });
-
-        // --- Toast Notification Handler ---
-        const toast = document.getElementById('toast-notification');
-        const toastMessage = document.getElementById('toast-message');
         let toastTimeout;
         const showToast = (message) => {
+            const toast = document.getElementById('toast-notification');
+            const toastMessage = document.getElementById('toast-message');
             clearTimeout(toastTimeout);
             toastMessage.textContent = message;
             toast.classList.add('show');
             toastTimeout = setTimeout(() => { toast.classList.remove('show'); }, 3000);
         };
 
-        // --- Button Functionality ---
-        document.getElementById('buy-pro-button').addEventListener('click', () => {
-            const upiId = '9785361961@ybl';
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(upiId).then(() => showToast('UPI ID copied to clipboard!'), () => showToast('Could not copy UPI ID.'));
-            } else {
-                const textArea = document.createElement('textarea');
-                textArea.value = upiId;
-                document.body.appendChild(textArea);
-                textArea.focus(); textArea.select();
-                try { document.execCommand('copy'); showToast('UPI ID copied to clipboard!'); } catch (err) { showToast('Could not copy UPI ID.'); }
-                document.body.removeChild(textArea);
-            }
-        });
-
-        // --- Gemini API Functions ---
-        const apiKey = ""; // Canvas will provide this at runtime.
-        const generateTestimonial = async () => {
-            const testimonialBtnText = document.getElementById('testimonial-btn-text');
-            const testimonialLoader = document.getElementById('testimonial-loader');
-            testimonialBtnText.classList.add('hidden');
-            testimonialLoader.classList.remove('hidden');
+        // --- Gemini API ---
+        const apiKey = ""; // Provided at runtime
+        async function generateTestimonial() {
+            const btnText = document.getElementById('testimonial-btn-text');
+            const loader = document.getElementById('testimonial-loader');
+            btnText.classList.add('hidden');
+            loader.classList.remove('hidden');
             try {
                 const prompt = "Write a short, enthusiastic user testimonial for 'REMINIAI', an AI photo enhancement website. Mention a specific feature like 'face restoration' or 'colorization'. The user should sound like a real person, like a photographer, a genealogist, or just someone preserving family memories. Give the user a random first name and last initial, and a role (e.g., 'Family Historian').";
                 const payload = { contents: [{ parts: [{ text: prompt }] }] };
@@ -494,127 +633,101 @@
                 console.error("Testimonial generation error:", error);
                 showToast("Failed to generate testimonial.");
             } finally {
-                testimonialBtnText.classList.remove('hidden');
-                testimonialLoader.classList.add('hidden');
+                btnText.classList.remove('hidden');
+                loader.classList.add('hidden');
             }
-        };
-        document.getElementById('generate-testimonial-btn').addEventListener('click', generateTestimonial);
+        }
 
-        // --- Image Editor Functions ---
-        const fileUploadInput = document.getElementById('file-upload');
-        fileUploadInput.addEventListener('change', (event) => {
-            if (event.target.files && event.target.files[0]) {
-                const file = event.target.files[0];
-                if (file.size > 5 * 1024 * 1024) { showToast("File is too large (Max 5MB)."); return; }
-                
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    originalImage = new Image();
-                    originalImage.onload = () => {
-                        currentImage = originalImage;
-                        // Switch to editor view
-                        uploadView.classList.add('hidden');
-                        editorView.classList.remove('hidden');
-                        // Draw image on canvas
-                        drawImageToCanvas(originalImage);
-                    };
-                    originalImage.src = e.target.result;
+        // --- Image Editor ---
+        function handleImageUpload(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) { showToast("File is too large (Max 5MB)."); return; }
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                originalImage = new Image();
+                originalImage.onload = () => {
+                    currentImage = originalImage;
+                    document.getElementById('upload-view').classList.add('hidden');
+                    document.getElementById('editor-view').classList.remove('hidden');
+                    drawImageToCanvas(originalImage);
                 };
-                reader.readAsDataURL(file);
-            }
-        });
+                originalImage.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
 
-        const drawImageToCanvas = (image, filter = 'none') => {
-            // Set canvas size based on image, but constrained by modal size
-            const maxWidth = 550; // max width inside modal
-            const maxHeight = 400; // max height
+        function drawImageToCanvas(image, filter = 'none') {
+            const maxWidth = 550, maxHeight = 400;
             let { width, height } = image;
             if (width > height) {
-                if (width > maxWidth) {
-                    height = height * (maxWidth / width);
-                    width = maxWidth;
-                }
+                if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; }
             } else {
-                if (height > maxHeight) {
-                    width = width * (maxHeight / height);
-                    height = maxHeight;
-                }
+                if (height > maxHeight) { width *= maxHeight / height; height = maxHeight; }
             }
             canvas.width = width;
             canvas.height = height;
-            
-            // Apply filter and draw
             ctx.filter = filter;
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
             updateDownloadLink();
-        };
+        }
 
-        const updateDownloadLink = () => {
-            const downloadLink = document.getElementById('download-btn');
-            downloadLink.href = canvas.toDataURL('image/jpeg', 0.9); // Get JPEG with 90% quality
-        };
+        function applyFilterWithProcessing(filter, message) {
+            const overlay = document.getElementById('processing-overlay');
+            overlay.classList.remove('hidden');
+            setTimeout(() => {
+                drawImageToCanvas(currentImage, filter);
+                overlay.classList.add('hidden');
+                showToast(message);
+            }, 1500); // Simulate processing time
+        }
 
-        // Editor button listeners
-        document.getElementById('enhance-btn').addEventListener('click', () => {
-            drawImageToCanvas(currentImage, 'brightness(1.15) contrast(1.15) saturate(1.2)');
-            showToast('AI Enhance Applied!');
-        });
+        function updateDownloadLink() {
+            document.getElementById('download-btn').href = canvas.toDataURL('image/jpeg', 0.9);
+        }
 
-        document.getElementById('face-restore-btn').addEventListener('click', () => {
-            drawImageToCanvas(currentImage, 'contrast(1.2) brightness(1.05)');
-            showToast('Face Restoration Applied!');
-        });
+        function saveToComparisonSlider() {
+            if (originalImage) {
+                sessionStorage.setItem('beforeImage', originalImage.src);
+                sessionStorage.setItem('afterImage', canvas.toDataURL('image/jpeg', 0.9));
+            }
+        }
 
-        document.getElementById('colorize-btn').addEventListener('click', () => {
-            drawImageToCanvas(currentImage, 'saturate(2.5)');
-            showToast('AI Colorization Applied!');
-        });
+        // --- Comparison Slider ---
+        function initializeComparisonSlider() {
+            // Update slider with saved images if they exist
+            const savedBefore = sessionStorage.getItem('beforeImage');
+            const savedAfter = sessionStorage.getItem('afterImage');
+            if (savedBefore && savedAfter) {
+                document.getElementById('before-image').src = savedBefore;
+                document.getElementById('after-image').src = savedAfter;
+            }
 
-        document.getElementById('denoise-btn').addEventListener('click', () => {
-            drawImageToCanvas(currentImage, 'blur(0.4px) contrast(0.95)');
-            showToast('Denoise & Deblur Applied!');
-        });
-        
-        document.getElementById('scratch-remove-btn').addEventListener('click', () => {
-            showToast('Scratch Removal feature coming soon!');
-        });
-
-        document.getElementById('magic-retouch-btn').addEventListener('click', () => {
-            showToast('Magic Retouch feature coming soon!');
-        });
-        
-        document.getElementById('crop-btn').addEventListener('click', () => {
-            showToast('Crop feature coming soon!');
-        });
-
-        document.getElementById('reset-btn').addEventListener('click', () => {
-            drawImageToCanvas(originalImage); // Redraw with the original image
-            showToast('Edits Reset!');
-        });
-
-        // --- Image Comparison Slider ---
-        const comparisonContainer = document.getElementById('image-comparison');
-        if (comparisonContainer) {
-            const beforeImage = comparisonContainer.querySelector('.before-image');
-            const sliderHandle = comparisonContainer.querySelector('.slider-handle');
+            const container = document.getElementById('image-comparison');
+            if (!container) return;
+            const beforeImgContainer = container.querySelector('.before-image');
+            const handle = container.querySelector('.slider-handle');
             let isDragging = false;
-            const startDrag = () => { isDragging = true; };
-            const stopDrag = () => { isDragging = false; };
+            
             const onDrag = (e) => {
                 if (!isDragging) return;
-                const containerRect = comparisonContainer.getBoundingClientRect();
-                let offsetX = (e.clientX || e.touches[0].clientX) - containerRect.left;
-                offsetX = Math.max(0, Math.min(offsetX, containerRect.width));
-                const percentage = (offsetX / containerRect.width) * 100;
-                beforeImage.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0 100%)`;
-                sliderHandle.style.left = `${percentage}%`;
+                const rect = container.getBoundingClientRect();
+                let x = (e.clientX || e.touches[0].clientX) - rect.left;
+                x = Math.max(0, Math.min(x, rect.width));
+                const percent = (x / rect.width) * 100;
+                beforeImgContainer.style.clipPath = `polygon(0 0, ${percent}% 0, ${percent}% 100%, 0 100%)`;
+                handle.style.left = `${percent}%`;
             };
-            comparisonContainer.addEventListener('mousedown', startDrag);
-            comparisonContainer.addEventListener('touchstart', startDrag, { passive: true });
-            window.addEventListener('mouseup', stopDrag);
-            window.addEventListener('touchend', stopDrag);
+            const startDrag = (e) => { e.preventDefault(); isDragging = true; };
+            const stopDrag = () => { isDragging = false; };
+
+            container.addEventListener('mousedown', startDrag);
             window.addEventListener('mousemove', onDrag);
-            window.addEventListener('touchmove', onDrag, { passive: true });
+            window.addEventListener('mouseup', stopDrag);
+            container.addEventListener('touchstart', startDrag, { passive: false });
+            window.addEventListener('touchmove', onDrag);
+            window.addEventListener('touchend', stopDrag);
         }
     </script>
 </body>
