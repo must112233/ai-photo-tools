@@ -1,69 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AI Photo Tools</title>
   <style>
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #000000, #1a1a1a);
+      background-color: #1e1e2f;
       color: white;
-      text-align: center;
-      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
     }
     h1 {
-      color: #ffcc00;
-      font-size: 40px;
+      color: #00ffd5;
+      margin-bottom: 20px;
     }
-    p {
-      font-size: 18px;
-      margin-top: -10px;
-      color: #cccccc;
+    .upload-section {
+      background: #2c2c3e;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,255,213,0.1);
+    }
+    input[type="file"] {
+      margin: 15px 0;
+      color: white;
+    }
+    .image-preview {
+      max-width: 400px;
+      max-height: 400px;
+      border: 3px solid #00ffd5;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .buttons {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
     }
     .button {
-      display: inline-block;
-      margin: 20px;
-      padding: 15px 30px;
-      font-size: 20px;
-      font-weight: bold;
-      color: white;
-      background: #ff3366;
+      background-color: #00ffd5;
+      color: black;
+      padding: 12px 20px;
       border: none;
-      border-radius: 8px;
-      text-decoration: none;
-      transition: background 0.3s, transform 0.3s;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s ease;
     }
     .button:hover {
-      background: #cc0052;
-      transform: scale(1.05);
+      background-color: #00c4aa;
     }
-    .features {
-      margin-top: 40px;
-    }
-    .footer {
-      margin-top: 60px;
-      font-size: 14px;
-      color: #999999;
+    .note {
+      margin-top: 30px;
+      color: #aaaaaa;
     }
   </style>
 </head>
 <body>
+  <h1>AI Photo Tools</h1>
 
-  <h1>🧠 AI Photo Tools</h1>
-  <p>Smart tools to enhance and transform your images with just one click</p>
-
-  <div class="features">
-    <a href="https://your-link.com/photosmooth" class="button">🖌️ PhotoSmooth</a>
-    <a href="https://your-link.com/bgremover" class="button">🧼 Background Remover</a>
-    <a href="https://your-link.com/enhancer" class="button">✨ Enhance Photo</a>
-    <a href="https://your-link.com/cartoonify" class="button">🎨 Cartoonify</a>
-    <a href="https://your-link.com/ai-upscaler" class="button">📈 AI Upscaler</a>
+  <div class="upload-section">
+    <input type="file" id="imageUpload" accept="image/*" />
+    <br />
+    <img id="previewImage" class="image-preview" src="" alt="Preview will appear here" style="display:none;" />
+    <div class="buttons">
+      <button class="button" onclick="removeBackground()">Remove Background</button>
+      <button class="button" onclick="enhanceImage()">Enhance Image</button>
+      <button class="button" onclick="convertImage()">Convert Image</button>
+    </div>
   </div>
 
-  <div class="footer">
-    © 2025 Mustakeem | AI Tools by MS Stories
-  </div>
+  <div class="note" id="note"></div>
 
+  <script>
+    const imageUpload = document.getElementById("imageUpload");
+    const previewImage = document.getElementById("previewImage");
+    const note = document.getElementById("note");
+
+    imageUpload.addEventListener("change", function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          previewImage.src = e.target.result;
+          previewImage.style.display = "block";
+          note.innerText = "";
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function removeBackground() {
+      if (!previewImage.src) {
+        note.innerText = "Please upload an image first.";
+        return;
+      }
+      note.innerHTML = '🔄 Removing background... <br><small>Feature coming soon! Will be linked to AI API.</small>';
+      // In future, integrate API here
+    }
+
+    function enhanceImage() {
+      if (!previewImage.src) {
+        note.innerText = "Please upload an image first.";
+        return;
+      }
+      note.innerHTML = '✨ Enhancing image... <br><small>Feature coming soon! AI enhancement via API.</small>';
+    }
+
+    function convertImage() {
+      if (!previewImage.src) {
+        note.innerText = "Please upload an image first.";
+        return;
+      }
+      note.innerHTML = '🔃 Converting image... <br><small>Feature coming soon! Eg: PNG to JPG, etc.</small>';
+    }
+  </script>
 </body>
 </html>
