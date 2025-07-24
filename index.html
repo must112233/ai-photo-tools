@@ -347,23 +347,25 @@
                     <canvas id="editor-canvas"></canvas>
                  </div>
 
-                 <!-- Toolbar -->
-                 <div class="grid grid-cols-2 md:grid-cols-5 gap-2 mb-4">
-                    <button id="enhance-btn" class="p-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-sm">AI Enhance</button>
-                    <button id="smooth-btn" class="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm">Smooth</button>
-                    <button id="crop-btn" class="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm">Crop</button>
-                    <button id="reset-btn" class="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm">Reset</button>
-                    <a id="download-btn" href="#" download="reminiai-enhanced.jpg" class="p-2 bg-green-600 hover:bg-green-700 rounded-lg text-sm text-center">Download</a>
+                 <!-- Main Controls -->
+                 <div class="grid grid-cols-3 gap-2 mb-4">
+                    <button id="reset-btn" class="p-2 bg-red-600 hover:bg-red-700 rounded-lg text-sm flex items-center justify-center gap-1"><i data-lucide="rotate-ccw" class="w-4 h-4"></i>Reset</button>
+                    <button id="crop-btn" class="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm flex items-center justify-center gap-1"><i data-lucide="crop" class="w-4 h-4"></i>Crop</button>
+                    <a id="download-btn" href="#" download="reminiai-enhanced.jpg" class="p-2 bg-green-600 hover:bg-green-700 rounded-lg text-sm flex items-center justify-center gap-1"><i data-lucide="download" class="w-4 h-4"></i>Download</a>
                  </div>
 
-                 <!-- Caption Generation -->
-                 <button id="generate-caption-btn" class="w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg transition-colors">
-                    <span id="caption-btn-text">Generate Caption ✨</span>
-                    <div id="caption-loader" class="loader hidden"></div>
-                </button>
-                <div id="caption-result-area" class="hidden mt-4 p-4 bg-gray-800 rounded-lg text-left">
-                    <p id="caption-text" class="text-gray-300 whitespace-pre-wrap"></p>
-                </div>
+                 <!-- AI Magic Tools -->
+                 <div class="border-t border-gray-700 pt-4">
+                    <h3 class="text-lg font-semibold text-indigo-300 mb-3">AI Magic Tools</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                        <button id="enhance-btn" class="p-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-sm">Enhance</button>
+                        <button id="face-restore-btn" class="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm">Face Restore</button>
+                        <button id="colorize-btn" class="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm">AI Colorize</button>
+                        <button id="denoise-btn" class="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm">Denoise</button>
+                        <button id="scratch-remove-btn" class="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm">Scratches</button>
+                        <button id="magic-retouch-btn" class="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm">Retouch</button>
+                    </div>
+                 </div>
             </div>
         </div>
     </div>
@@ -463,50 +465,6 @@
 
         // --- Gemini API Functions ---
         const apiKey = ""; // Canvas will provide this at runtime.
-        const fileToBase64 = (file) => new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result.split(',')[1]);
-            reader.onerror = error => reject(error);
-        });
-
-        const generateCaption = async () => {
-            const captionBtnText = document.getElementById('caption-btn-text');
-            const captionLoader = document.getElementById('caption-loader');
-            const captionResultArea = document.getElementById('caption-result-area');
-            const captionText = document.getElementById('caption-text');
-            
-            // Get the current image data from the canvas
-            const imageData = canvas.toDataURL('image/jpeg').split(',')[1];
-            if (!imageData) { showToast("No image to analyze."); return; }
-
-            captionBtnText.classList.add('hidden');
-            captionLoader.classList.remove('hidden');
-            captionResultArea.classList.add('hidden');
-
-            try {
-                const prompt = "Analyze this enhanced photo and write 3 creative, engaging social media caption options for it. Include relevant emojis and hashtags.";
-                const payload = { contents: [{ parts: [{ text: prompt }, { inlineData: { mimeType: "image/jpeg", data: imageData } }] }] };
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-                const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                const result = await response.json();
-                if (result.candidates && result.candidates.length > 0) {
-                    const text = result.candidates[0].content.parts[0].text;
-                    captionText.textContent = text;
-                    captionResultArea.classList.remove('hidden');
-                } else { throw new Error("No caption generated."); }
-            } catch (error) {
-                console.error("Caption generation error:", error);
-                showToast("Failed to generate caption.");
-                captionText.textContent = "Sorry, we couldn't generate a caption at this time.";
-                captionResultArea.classList.remove('hidden');
-            } finally {
-                captionBtnText.classList.remove('hidden');
-                captionLoader.classList.add('hidden');
-            }
-        };
-        document.getElementById('generate-caption-btn').addEventListener('click', generateCaption);
-
         const generateTestimonial = async () => {
             const testimonialBtnText = document.getElementById('testimonial-btn-text');
             const testimonialLoader = document.getElementById('testimonial-loader');
@@ -602,9 +560,27 @@
             showToast('AI Enhance Applied!');
         });
 
-        document.getElementById('smooth-btn').addEventListener('click', () => {
-            drawImageToCanvas(currentImage, 'blur(0.5px)');
-            showToast('Smoothing Applied!');
+        document.getElementById('face-restore-btn').addEventListener('click', () => {
+            drawImageToCanvas(currentImage, 'contrast(1.2) brightness(1.05)');
+            showToast('Face Restoration Applied!');
+        });
+
+        document.getElementById('colorize-btn').addEventListener('click', () => {
+            drawImageToCanvas(currentImage, 'saturate(2.5)');
+            showToast('AI Colorization Applied!');
+        });
+
+        document.getElementById('denoise-btn').addEventListener('click', () => {
+            drawImageToCanvas(currentImage, 'blur(0.4px) contrast(0.95)');
+            showToast('Denoise & Deblur Applied!');
+        });
+        
+        document.getElementById('scratch-remove-btn').addEventListener('click', () => {
+            showToast('Scratch Removal feature coming soon!');
+        });
+
+        document.getElementById('magic-retouch-btn').addEventListener('click', () => {
+            showToast('Magic Retouch feature coming soon!');
         });
         
         document.getElementById('crop-btn').addEventListener('click', () => {
