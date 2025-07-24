@@ -1,125 +1,489 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AI Photo Tools</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #1e1e2f;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-    }
-    h1 {
-      color: #00ffd5;
-      margin-bottom: 20px;
-    }
-    .upload-section {
-      background: #2c2c3e;
-      padding: 20px;
-      border-radius: 12px;
-      text-align: center;
-      box-shadow: 0 0 10px rgba(0,255,213,0.1);
-    }
-    input[type="file"] {
-      margin: 15px 0;
-      color: white;
-    }
-    .image-preview {
-      max-width: 400px;
-      max-height: 400px;
-      border: 3px solid #00ffd5;
-      border-radius: 8px;
-      margin-bottom: 20px;
-    }
-    .buttons {
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .button {
-      background-color: #00ffd5;
-      color: black;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 10px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s ease;
-    }
-    .button:hover {
-      background-color: #00c4aa;
-    }
-    .note {
-      margin-top: 30px;
-      color: #aaaaaa;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REMINIAI - AI Photo Enhancer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Adsterra Social Bar Ad -->
+    <script type='text/javascript' src='//pl27171403.profitableratecpm.com/f9/12/2f/f9122fa99afde8b4d3732bf41be0e48b.js'></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0B0F19;
+            color: #E0E0E0;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #4F46E5, #A855F7, #EC4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-bg {
+            background-image: radial-gradient(circle at top right, rgba(79, 70, 229, 0.2) 0%, rgba(11, 15, 25, 0) 40%),
+                              radial-gradient(circle at bottom left, rgba(236, 72, 153, 0.15) 0%, rgba(11, 15, 25, 0) 50%);
+        }
+        .feature-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-5px);
+            border-color: rgba(79, 70, 229, 0.5);
+        }
+        .comparison-slider {
+            position: relative;
+            overflow: hidden;
+            cursor: ew-resize;
+        }
+        .comparison-slider .before-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+        }
+        .comparison-slider .slider-handle {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 4px;
+            height: 100%;
+            background-color: white;
+            transform: translateX(-50%);
+            pointer-events: none;
+        }
+        .comparison-slider .slider-handle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            border: 2px solid white;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(79, 70, 229, 0.8);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='15' y1='18' x2='9' y2='12'/%3E%3Cline x1='9' y1='6' x2='15' y2='12'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+    </style>
 </head>
-<body>
-  <h1>AI Photo Tools</h1>
+<body class="antialiased">
 
-  <div class="upload-section">
-    <input type="file" id="imageUpload" accept="image/*" />
-    <br />
-    <img id="previewImage" class="image-preview" src="" alt="Preview will appear here" style="display:none;" />
-    <div class="buttons">
-      <button class="button" onclick="removeBackground()">Remove Background</button>
-      <button class="button" onclick="enhanceImage()">Enhance Image</button>
-      <button class="button" onclick="convertImage()">Convert Image</button>
-    </div>
-  </div>
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-opacity-80 backdrop-blur-md border-b border-gray-800">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <a href="#" class="flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-500"><path d="m12 3-1.41 1.41L16.17 10H4v4h12.17l-5.58 5.59L12 21l8-8-8-8z"/><path d="M4 3h.01"/><path d="M4 8h.01"/><path d="M4 13h.01"/><path d="M4 18h.01"/><path d="M9 3h.01"/><path d="M9 8h.01"/><path d="M9 13h.01"/><path d="M9 18h.01"/><path d="M14 3h.01"/><path d="M14 8h.01"/><path d="M14 13h.01"/><path d="M14 18h.01"/></svg>
+                        <span class="text-xl font-bold text-white">REMINIAI</span>
+                    </a>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#features" class="text-gray-300 hover:text-white transition-colors">Features</a>
+                    <a href="#gallery" class="text-gray-300 hover:text-white transition-colors">Gallery</a>
+                    <a href="#testimonials" class="text-gray-300 hover:text-white transition-colors">Testimonials</a>
+                    <a href="#pricing" class="text-gray-300 hover:text-white transition-colors">Pricing</a>
+                </nav>
+                <div class="flex items-center">
+                     <a href="#" class="hidden sm:inline-block text-gray-300 hover:text-white mr-6">Log In</a>
+                    <a href="#" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors">Get Started Free</a>
+                    <button id="mobile-menu-button" class="md:hidden ml-4 p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#features" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Features</a>
+                <a href="#gallery" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Gallery</a>
+                <a href="#testimonials" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Testimonials</a>
+                <a href="#pricing" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Pricing</a>
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Log In</a>
+            </div>
+        </div>
+    </header>
 
-  <div class="note" id="note"></div>
+    <main>
+        <!-- Adsterra Banner Ad -->
+        <div class="container mx-auto my-4 flex justify-center">
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : '0832f30f5523a8d14e11a3857426e9cf',
+                    'format' : 'iframe',
+                    'height' : 90,
+                    'width' : 728,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//www.highperformanceformat.com/0832f30f5523a8d14e11a3857426e9cf/invoke.js"></script>
+        </div>
 
-  <script>
-    const imageUpload = document.getElementById("imageUpload");
-    const previewImage = document.getElementById("previewImage");
-    const note = document.getElementById("note");
+        <!-- Hero Section -->
+        <section class="pt-16 pb-20 md:pt-32 md:pb-32 hero-bg">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tighter text-white mb-6">
+                    Breathe New Life into Your Photos with <span class="gradient-text">AI Enhancement</span>
+                </h1>
+                <p class="max-w-2xl mx-auto text-lg md:text-xl text-gray-400 mb-10">
+                    Turn your low-quality, blurry, or old photos into stunning, high-definition masterpieces with a single click. Our AI is trained to restore details you thought were lost forever.
+                </p>
+                <div class="flex justify-center items-center space-x-4">
+                    <a href="#" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-8 py-4 rounded-lg transition-transform transform hover:scale-105 shadow-lg">
+                        Enhance Your Photo Now
+                    </a>
+                    <a href="#gallery" class="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors">
+                        <i data-lucide="play-circle"></i>
+                        <span>See It In Action</span>
+                    </a>
+                </div>
+                 <div class="mt-12 text-gray-500">
+                    <span>No credit card required</span>
+                </div>
+            </div>
+        </section>
 
-    imageUpload.addEventListener("change", function () {
-      const file = this.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          previewImage.src = e.target.result;
-          previewImage.style.display = "block";
-          note.innerText = "";
-        };
-        reader.readAsDataURL(file);
-      }
-    });
+        <!-- Features Section -->
+        <section id="features" class="py-20 bg-gray-900/50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white">One Tool, Limitless Possibilities</h2>
+                    <p class="text-lg text-gray-400 mt-2">Enhance, restore, and reimagine your images like never before.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Feature 1 -->
+                    <div class="feature-card p-8 rounded-xl">
+                        <div class="flex items-center justify-center h-12 w-12 rounded-lg bg-indigo-500/20 text-indigo-400 mb-4">
+                            <i data-lucide="sparkles"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">Upscale & Enhance</h3>
+                        <p class="text-gray-400">Increase image resolution up to 4x without losing quality. Perfect for printing or high-res displays.</p>
+                    </div>
+                    <!-- Feature 2 -->
+                    <div class="feature-card p-8 rounded-xl">
+                        <div class="flex items-center justify-center h-12 w-12 rounded-lg bg-pink-500/20 text-pink-400 mb-4">
+                            <i data-lucide="wind"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">Denoise & Deblur</h3>
+                        <p class="text-gray-400">Remove noise from grainy photos and fix motion blur with our advanced AI algorithms.</p>
+                    </div>
+                    <!-- Feature 3 -->
+                    <div class="feature-card p-8 rounded-xl">
+                        <div class="flex items-center justify-center h-12 w-12 rounded-lg bg-purple-500/20 text-purple-400 mb-4">
+                            <i data-lucide="image-plus"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">Face Restoration</h3>
+                        <p class="text-gray-400">Bring out facial details in old or blurry portraits. See your loved ones in crystal clear quality.</p>
+                    </div>
+                    <!-- Feature 4 -->
+                    <div class="feature-card p-8 rounded-xl">
+                        <div class="flex items-center justify-center h-12 w-12 rounded-lg bg-green-500/20 text-green-400 mb-4">
+                            <i data-lucide="palette"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">AI Colorization</h3>
+                        <p class="text-gray-400">Automatically colorize black and white photos with stunning accuracy and realism.</p>
+                    </div>
+                    <!-- Feature 5 -->
+                    <div class="feature-card p-8 rounded-xl">
+                        <div class="flex items-center justify-center h-12 w-12 rounded-lg bg-yellow-500/20 text-yellow-400 mb-4">
+                            <i data-lucide="eraser"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">Scratch Removal</h3>
+                        <p class="text-gray-400">Effortlessly repair old photos by removing scratches, tears, and dust marks.</p>
+                    </div>
+                    <!-- Feature 6 -->
+                    <div class="feature-card p-8 rounded-xl">
+                        <div class="flex items-center justify-center h-12 w-12 rounded-lg bg-blue-500/20 text-blue-400 mb-4">
+                           <i data-lucide="wand-2"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">Magic Retouch</h3>
+                        <p class="text-gray-400">Remove unwanted objects, people, or text from your photos seamlessly.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    function removeBackground() {
-      if (!previewImage.src) {
-        note.innerText = "Please upload an image first.";
-        return;
-      }
-      note.innerHTML = '🔄 Removing background... <br><small>Feature coming soon! Will be linked to AI API.</small>';
-      // In future, integrate API here
-    }
+        <!-- Gallery / Before-After Section -->
+        <section id="gallery" class="py-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white">See the <span class="gradient-text">Magic</span> Happen</h2>
+                    <p class="text-lg text-gray-400 mt-2">Drag the slider to compare the original and enhanced images.</p>
+                </div>
+                
+                <div class="comparison-slider rounded-2xl shadow-2xl max-w-4xl mx-auto" id="image-comparison">
+                    <img src="https://placehold.co/1200x800/333/ccc?text=After" alt="After" class="block w-full rounded-2xl">
+                    <div class="before-image">
+                        <img src="https://placehold.co/1200x800/999/111?text=Before" alt="Before" class="block w-full rounded-2xl">
+                    </div>
+                    <div class="slider-handle"></div>
+                </div>
+            </div>
+        </section>
 
-    function enhanceImage() {
-      if (!previewImage.src) {
-        note.innerText = "Please upload an image first.";
-        return;
-      }
-      note.innerHTML = '✨ Enhancing image... <br><small>Feature coming soon! AI enhancement via API.</small>';
-    }
+        <!-- Testimonials Section -->
+        <section id="testimonials" class="py-20 bg-gray-900/50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white">Loved by Creators and Memory Keepers</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Testimonial 1 -->
+                    <div class="feature-card p-8 rounded-xl">
+                        <p class="text-gray-300 mb-6">"I'm speechless. REMINIAI restored my grandparents' wedding photo from the 1950s. The clarity is just unbelievable. It felt like looking at a photo taken yesterday."</p>
+                        <div class="flex items-center">
+                            <img class="w-12 h-12 rounded-full mr-4" src="https://i.pravatar.cc/48?u=1" alt="Avatar">
+                            <div>
+                                <p class="font-bold text-white">Sarah L.</p>
+                                <p class="text-sm text-gray-400">Photographer</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Testimonial 2 -->
+                    <div class="feature-card p-8 rounded-xl">
+                        <p class="text-gray-300 mb-6">"As a real estate agent, high-quality photos are everything. This tool helps me enhance property photos taken in poor lighting, making them look professional and appealing. A total game-changer!"</p>
+                        <div class="flex items-center">
+                            <img class="w-12 h-12 rounded-full mr-4" src="https://i.pravatar.cc/48?u=2" alt="Avatar">
+                            <div>
+                                <p class="font-bold text-white">Michael B.</p>
+                                <p class="text-sm text-gray-400">Real Estate Agent</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Testimonial 3 -->
+                    <div class="feature-card p-8 rounded-xl">
+                         <p class="text-gray-300 mb-6">"I use this for upscaling my digital art. The AI is smart enough to enhance details without creating weird artifacts. It's now an essential part of my workflow."</p>
+                        <div class="flex items-center">
+                            <img class="w-12 h-12 rounded-full mr-4" src="https://i.pravatar.cc/48?u=3" alt="Avatar">
+                            <div>
+                                <p class="font-bold text-white">Chloe W.</p>
+                                <p class="text-sm text-gray-400">Digital Artist</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    function convertImage() {
-      if (!previewImage.src) {
-        note.innerText = "Please upload an image first.";
-        return;
-      }
-      note.innerHTML = '🔃 Converting image... <br><small>Feature coming soon! Eg: PNG to JPG, etc.</small>';
-    }
-  </script>
+        <!-- Pricing Section -->
+        <section id="pricing" class="py-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white">Choose Your Plan</h2>
+                    <p class="text-lg text-gray-400 mt-2">Start for free, upgrade when you need more power.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                    <!-- Free Plan -->
+                    <div class="feature-card p-8 rounded-xl flex flex-col">
+                        <h3 class="text-2xl font-bold text-white">Free</h3>
+                        <p class="text-gray-400 mt-2 mb-6">For casual use</p>
+                        <p class="text-4xl font-extrabold text-white mb-6">$0<span class="text-lg font-medium text-gray-400">/month</span></p>
+                        <ul class="space-y-4 text-gray-300 mb-8 flex-grow">
+                            <li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>5 free enhancements</li>
+                            <li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>Standard speed</li>
+                            <li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>Watermarked results</li>
+                        </ul>
+                        <a href="#" class="w-full text-center bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition-colors">Get Started</a>
+                    </div>
+                    <!-- Pro Plan -->
+                    <div class="feature-card p-8 rounded-xl flex flex-col border-2 border-indigo-500 relative">
+                        <div class="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2">
+                            <span class="bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full">MOST POPULAR</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white">Pro</h3>
+                        <p class="text-gray-400 mt-2 mb-6">For professionals & enthusiasts</p>
+                        <p class="text-4xl font-extrabold text-white mb-2">$9<span class="text-lg font-medium text-gray-400">/month</span></p>
+                        <div class="mb-6 text-center">
+                            <p class="text-indigo-300 font-semibold">To buy the pro version, pay to UPI:</p>
+                            <p class="text-lg font-bold text-white mt-1 select-all">9785361961@ybl</p>
+                        </div>
+                        <ul class="space-y-4 text-gray-300 mb-8 flex-grow">
+                            <li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>200 enhancements/month</li>
+                            <li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>Priority processing</li>
+                            <li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>No watermarks</li>
+                            <li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>Access to all AI tools</li>
+                        </ul>
+                        <a href="#" class="w-full text-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg transition-colors">Buy Pro Version</a>
+                    </div>
+                    <!-- Business Plan -->
+                    <div class="feature-card p-8 rounded-xl flex flex-col">
+                        <h3 class="text-2xl font-bold text-white">Business</h3>
+                        <p class="text-gray-400 mt-2 mb-6">For teams & agencies</p>
+                        <p class="text-4xl font-extrabold text-white mb-6">$29<span class="text-lg font-medium text-gray-400">/month</span></p>
+                        <ul class="space-y-4 text-gray-300 mb-8 flex-grow">
+                            <li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>Unlimited enhancements</li>
+                            <li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>Highest priority queue</li>
+                            <li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>API access</li>
+                            <li class="flex items-center"><i data-lucide="check" class="text-green-500 mr-2"></i>Team collaboration</li>
+                        </ul>
+                        <a href="#" class="w-full text-center bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition-colors">Contact Sales</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="py-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-12 text-center shadow-2xl">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white">Ready to Transform Your Photos?</h2>
+                    <p class="text-lg text-indigo-200 mt-4 mb-8 max-w-2xl mx-auto">Join thousands of users who are rediscovering their memories in stunning high definition. Try it for free today!</p>
+                    <a href="#" class="bg-white hover:bg-gray-200 text-indigo-600 font-bold px-8 py-4 rounded-lg transition-transform transform hover:scale-105 shadow-lg">
+                        Upload Your First Photo
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Adsterra Native Banner Ad -->
+        <div class="container mx-auto my-4 flex justify-center">
+            <script async="async" data-cfasync="false" src="//pl27171389.profitableratecpm.com/513e0072d6bb5d47420d102741dfcd84/invoke.js"></script>
+            <div id="container-513e0072d6bb5d47420d102741dfcd84"></div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900/50 border-t border-gray-800">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                <div class="col-span-2 lg:col-span-1">
+                    <a href="#" class="flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-500"><path d="m12 3-1.41 1.41L16.17 10H4v4h12.17l-5.58 5.59L12 21l8-8-8-8z"/><path d="M4 3h.01"/><path d="M4 8h.01"/><path d="M4 13h.01"/><path d="M4 18h.01"/><path d="M9 3h.01"/><path d="M9 8h.01"/><path d="M9 13h.01"/><path d="M9 18h.01"/><path d="M14 3h.01"/><path d="M14 8h.01"/><path d="M14 13h.01"/><path d="M14 18h.01"/></svg>
+                        <span class="text-lg font-bold text-white">REMINIAI</span>
+                    </a>
+                    <p class="text-gray-400 mt-4 text-sm">Enhancing memories, one pixel at a time.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-white">Product</h4>
+                    <ul class="mt-4 space-y-3">
+                        <li><a href="#features" class="text-gray-400 hover:text-white text-sm">Features</a></li>
+                        <li><a href="#pricing" class="text-gray-400 hover:text-white text-sm">Pricing</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white text-sm">API</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white text-sm">Changelog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-white">Company</h4>
+                    <ul class="mt-4 space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white text-sm">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white text-sm">Careers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white text-sm">Blog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white text-sm">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-white">Legal</h4>
+                    <ul class="mt-4 space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white text-sm">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white text-sm">Terms of Service</a></li>
+                    </ul>
+                </div>
+                 <div class="col-span-2 md:col-span-1">
+                    <h4 class="font-semibold text-white">Follow Us</h4>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i data-lucide="twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i data-lucide="instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i data-lucide="facebook"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-gray-800 pt-8 text-center text-sm text-gray-500">
+                <p>&copy; 2024 REMINIAI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Lucide Icons
+        lucide.createIcons();
+
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Image Comparison Slider
+        const comparisonContainer = document.getElementById('image-comparison');
+        if (comparisonContainer) {
+            const beforeImage = comparisonContainer.querySelector('.before-image');
+            const sliderHandle = comparisonContainer.querySelector('.slider-handle');
+
+            let isDragging = false;
+
+            const startDrag = (e) => {
+                isDragging = true;
+                comparisonContainer.classList.add('is-dragging');
+            };
+
+            const stopDrag = () => {
+                isDragging = false;
+                comparisonContainer.classList.remove('is-dragging');
+            };
+
+            const onDrag = (e) => {
+                if (!isDragging) return;
+
+                const containerRect = comparisonContainer.getBoundingClientRect();
+                let offsetX = (e.clientX || e.touches[0].clientX) - containerRect.left;
+                
+                // Clamp the value between 0 and container width
+                offsetX = Math.max(0, Math.min(offsetX, containerRect.width));
+
+                const percentage = (offsetX / containerRect.width) * 100;
+                
+                beforeImage.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0 100%)`;
+                sliderHandle.style.left = `${percentage}%`;
+            };
+
+            comparisonContainer.addEventListener('mousedown', startDrag);
+            comparisonContainer.addEventListener('touchstart', startDrag, { passive: true });
+
+            window.addEventListener('mouseup', stopDrag);
+            window.addEventListener('touchend', stopDrag);
+            
+            window.addEventListener('mousemove', onDrag);
+            window.addEventListener('touchmove', onDrag, { passive: true });
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    // Close mobile menu if open
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                    
+                    const headerOffset = 64; // Height of the fixed header
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: "smooth"
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
